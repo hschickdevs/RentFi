@@ -1,6 +1,8 @@
 function Sign() {
 
   const handleLedger = () => {
+    // TODO add function call to updateLeaseStatus from factory lease agreement
+    // TODO add function call to activateLease
     window.location.href = '/ledger'; // Directly changing the URL
   };
 

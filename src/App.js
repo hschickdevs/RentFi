@@ -27,6 +27,7 @@ function App() {
       <button onClick={handleCreateListing}>Create Listing</button>
       <button onClick={handleSign}>Properties</button>
       <h1>3x3 Grid Example</h1>
+      {/* TODO Add function call to listAllProperties */}
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gridGap: '600px', margin: '20px' }}>
           <div className="grid-item">1</div>
