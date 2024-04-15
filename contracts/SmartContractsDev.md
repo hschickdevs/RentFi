@@ -97,4 +97,6 @@ Front-end developers can interact with these smart contracts using Web3.js or Et
 
 For example, to create a new lease contract, the front-end can call the `createLeaseContract` function on the `LeaseAgreementFactory` contract instance. To activate a lease, the front-end can call the `activateLease` function, passing the required `tokenId` and `tenant` address.
 
-By utilizing these smart contracts, front-end developers can build decentralized applications that manage residential lease agreements on the blockchain, providing a secure and transparent solution for property owners and tenants.
+Additionally, the front-end can utilize the `PropertyRegistryNFT` contract to retrieve the metadata associated with a specific property by calling the `tokenURI` function and passing the `tokenId` of the property, it will return a json file. 
+
+By utilizing these smart contracts, front-end developers can build decentralized applications that manage residential lease agreements on the blockchain, providing a secure and transparent solution for property owners and tenants.         
