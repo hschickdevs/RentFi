@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="frontend/img/logo-bg.png" alt="RentFi Logo">
+    <img src="frontend/media/logo-bg.png" alt="RentFi Logo">
     <h1>RentFi</h1>
     <strong>Immutable and transparent residential property leasing 🏠</strong>
 </div>
