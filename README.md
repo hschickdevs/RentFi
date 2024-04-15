@@ -28,7 +28,7 @@ We aim to solve the following problems plaguing the existing residential leasing
 * **Transaction Velocity:** RentFi uses blockchain technology to speed up the property leasing process. Smart contracts automate critical steps such as credit checks, lease execution, and payments. This reduces the need for manual processing, allowing transactions to be completed swiftly once all conditions are met.
 * **Title Fraud/Disputes:** RentFi minimizes title fraud and disputes using blockchain’s immutable ledger. This secure record of property ownership and lease agreements reduces the risk of document manipulation. In disputes, this ledger serves as a clear and accessible reference, simplifying resolution.
 
-> _View our Pitch Deck Here:_ [**🔗 RentFi Pitch Deck.pdf**](frontend/img/RentFi%20Pitch%20Deck.pdf)
+> _View our Pitch Deck Here:_ [**🔗 RentFi Pitch Deck.pdf**](frontend/media/RentFi%20Pitch%20Deck.pdf)
 
 ## 📦 Environments
 
