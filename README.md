@@ -23,7 +23,7 @@ RentFi is a cutting-edge decentralized application (dApp) that leverages the pow
 
 We aim to solve the following problems plaguing the existing residential leasing landscape:
 
-* **Price Gauging:** Unfair pricing occurs in existing deals due to a lack of transparency. With RentFi, lessees are protected from unfair pricing by the use of public contracts and public data.
+* **Price Gauging:** Unfair pricing occurs in existing deals due to a lack of transparency and information asymmetry between the lessor and lessee. With RentFi, lessees are protected from unfair pricing by the use of public contracts and public data.
 * **Excessive Paper Trails:** Existing lease agreements involve an extensive and often disorganized paper trail of legal documents. With RentFi, all aspects of the transaction are recorded on the blockchain's immutable digital ledger.
 * **Transaction Velocity:** RentFi uses blockchain technology to speed up the property leasing process. Smart contracts automate critical steps such as credit checks, lease execution, and payments. This reduces the need for manual processing, allowing transactions to be completed swiftly once all conditions are met.
 * **Title Fraud/Disputes:** RentFi minimizes title fraud and disputes using blockchain’s immutable ledger. This secure record of property ownership and lease agreements reduces the risk of document manipulation. In disputes, this ledger serves as a clear and accessible reference, simplifying resolution.
