@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Importing the ERC721 interface to interact with NFTs
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+// Importing the RC721 to interact with NFTs
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol"; 
+
 // Importing the residential lease agreement contract
 import "./ResidentialLeaseAgreement.sol";
 import "./PropertyRegistryNFT.sol";
@@ -10,7 +11,7 @@ import "./PropertyRegistryNFT.sol";
 // The factory contract that creates and tracks lease agreements
 contract LeaseAgreementFactory {
     // The NFT registry interface, used to check ownership of properties
-    IERC721 public propertyRegistry;
+    ERC721 public propertyRegistry;
 
     //Define lease states
     enum LeaseState {Pending, Active, Inactive}
@@ -27,6 +28,7 @@ contract LeaseAgreementFactory {
     // A struct for storing more detailed information about property listings
     struct DetailedPropertyListing {
         uint256 tokenId;
+        string NftUri;
         address leaseContract;
         address owner;
         LeaseState state;
@@ -47,7 +49,9 @@ contract LeaseAgreementFactory {
 
     // Constructor to set the property registry address
     constructor(address _propertyRegistry) {
-        propertyRegistry = IERC721(_propertyRegistry);
+        // propertyRegistry = IERC721(_propertyRegistry);
+        propertyRegistry = ERC721(_propertyRegistry);
+
     }
 
     mapping(uint256 => uint256) public tokenIdToIndex;
@@ -152,6 +156,47 @@ contract LeaseAgreementFactory {
         return filteredProperties;
     }
 
+    /**
+    * @dev Returns a detailed list of all properties managed through this factory. Each property's detailed information includes tenant, rental price, deposit amount, lease duration, and current lease state.
+    * @return An array of DetailedPropertyListing structures containing comprehensive details about each registered property.
+    * This function iterates through all property listings stored in the contract, retrieves the associated lease agreement details using the lease contract address, and constructs a detailed listing for each property.
+    */
+
+    function listAllPropertiesDetailed() public view returns (DetailedPropertyListing[] memory) {
+        // Check if the array has only the dummy element or is empty
+        if (allProperties.length <= 1) {
+            return new DetailedPropertyListing[](0) ;  // Return an empty array if there's only the dummy element or none
+        }
+
+        // Create a new array with one less element than the original array to exclude the dummy data at index 0
+        DetailedPropertyListing[] memory detailedListings = new DetailedPropertyListing[](allProperties.length - 1);
+
+        // Start from index 1 to skip the dummy data at index 0
+        for (uint i = 1; i < allProperties.length; i++) {
+            PropertyListing storage listing = allProperties[i];
+            ResidentialLeaseAgreement lease = ResidentialLeaseAgreement(listing.leaseContract);
+
+            DetailedPropertyListing memory detailedListing = DetailedPropertyListing({
+                tokenId: listing.tokenId,
+                NftUri: propertyRegistry.tokenURI(listing.tokenId),
+                leaseContract: listing.leaseContract,
+                owner: listing.owner,
+                state: listing.state,
+                tenant: lease.tenant(),
+                rentalPrice: lease.rentalPrice(),
+                depositAmount: lease.depositAmount(),
+                leaseDuration: lease.leaseDuration()
+            });
+
+            // Adjust the index to store in the new array starting from 0
+            detailedListings[i - 1] = detailedListing;
+        }
+
+        return detailedListings;
+    }
+
+
+
     // /**
     //  * @dev Retrieves detailed information about a specific lease.
     //  * @param tokenId Token ID of the property to query.
@@ -242,43 +287,7 @@ contract LeaseAgreementFactory {
     //     );
     // }
 
-    /**
-    * @dev Returns a detailed list of all properties managed through this factory. Each property's detailed information includes tenant, rental price, deposit amount, lease duration, and current lease state.
-    * @return An array of DetailedPropertyListing structures containing comprehensive details about each registered property.
-    * This function iterates through all property listings stored in the contract, retrieves the associated lease agreement details using the lease contract address, and constructs a detailed listing for each property.
-    */
 
-    function listAllPropertiesDetailed() public view returns (DetailedPropertyListing[] memory) {
-        // Check if the array has only the dummy element or is empty
-        if (allProperties.length <= 1) {
-            return new DetailedPropertyListing[](0) ;  // Return an empty array if there's only the dummy element or none
-        }
-
-        // Create a new array with one less element than the original array to exclude the dummy data at index 0
-        DetailedPropertyListing[] memory detailedListings = new DetailedPropertyListing[](allProperties.length - 1);
-
-        // Start from index 1 to skip the dummy data at index 0
-        for (uint i = 1; i < allProperties.length; i++) {
-            PropertyListing storage listing = allProperties[i];
-            ResidentialLeaseAgreement lease = ResidentialLeaseAgreement(listing.leaseContract);
-
-            DetailedPropertyListing memory detailedListing = DetailedPropertyListing({
-                tokenId: listing.tokenId,
-                leaseContract: listing.leaseContract,
-                owner: listing.owner,
-                state: listing.state,
-                tenant: lease.tenant(),
-                rentalPrice: lease.rentalPrice(),
-                depositAmount: lease.depositAmount(),
-                leaseDuration: lease.leaseDuration()
-            });
-
-            // Adjust the index to store in the new array starting from 0
-            detailedListings[i - 1] = detailedListing;
-        }
-
-        return detailedListings;
-    }
 
 
 }
