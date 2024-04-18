@@ -135,9 +135,6 @@ contract LeaseAgreementFactory {
     //  * @dev Lists all properties registered within the factory.
     //  * @return An array of all registered property listings.
     //  */
-    // function listAllProperties() public view returns (PropertyListing[] memory) {
-    //     return allProperties;
-    // }
 
     function listAllProperties() public view returns (PropertyListing[] memory) {
         // Check if the array has only the dummy element or is empty
@@ -241,51 +238,7 @@ contract LeaseAgreementFactory {
         return propertyRegistry.ownerOf(tokenId);
     }
 
-    // function listAllPropertiesDetailed() public view returns (
-    //     uint256[] memory tokenIds,
-    //     address[] memory leaseContracts,
-    //     address[] memory owners,
-    //     LeaseState[] memory states,
-    //     address[] memory tenants,
-    //     uint256[] memory rentalPrices,
-    //     uint256[] memory depositAmounts,
-    //     uint256[] memory leaseDurations
-    // ) {
-    //     uint256 total = allProperties.length;
-    //     tokenIds = new uint256[](total);
-    //     leaseContracts = new address[](total);
-    //     owners = new address[](total);
-    //     states = new LeaseState[](total);
-    //     tenants = new address[](total);
-    //     rentalPrices = new uint256[](total);
-    //     depositAmounts = new uint256[](total);
-    //     leaseDurations = new uint256[](total);
-
-    //     for (uint i = 0; i < total; i++) {
-    //         PropertyListing storage listing = allProperties[i];
-    //         ResidentialLeaseAgreement lease = ResidentialLeaseAgreement(listing.leaseContract);
-
-    //         tokenIds[i] = listing.tokenId;
-    //         leaseContracts[i] = listing.leaseContract;
-    //         owners[i] = listing.owner;
-    //         states[i] = listing.state;
-    //         tenants[i] = lease.tenant();
-    //         rentalPrices[i] = lease.rentalPrice();
-    //         depositAmounts[i] = lease.depositAmount();
-    //         leaseDurations[i] = lease.leaseDuration();
-    //     }
-
-    //     return (
-    //         tokenIds,
-    //         leaseContracts,
-    //         owners,
-    //         states,
-    //         tenants,
-    //         rentalPrices,
-    //         depositAmounts,
-    //         leaseDurations
-    //     );
-    // }
+    
 
 
 
