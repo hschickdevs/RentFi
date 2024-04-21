@@ -1,70 +1,20 @@
-import React, { useState } from 'react';
+
+import React from 'react';
+import Navbar from './Navbar';
+import './App.css';
+
 
 function CreateListing() {
-  const [formData, setFormData] = useState({
-    tokenId: '',
-    rentalPrice: '',
-    depositAmount: '',
-    leaseDuration: ''
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission here, you can access formData object
-    console.log(formData);
-  };
-
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Token ID:
-          <input
-            type="number"
-            name="tokenId"
-            value={formData.tokenId}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Rental Price:
-          <input
-            type="number"
-            name="rentalPrice"
-            value={formData.rentalPrice}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Deposit Amount:
-          <input
-            type="number"
-            name="depositAmount"
-            value={formData.depositAmount}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Lease Duration:
-          <input
-            type="number"
-            name="leaseDuration"
-            value={formData.leaseDuration}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );
+ return (
+   <div>
+     <Navbar />
+     <div className="container mt-3">
+       <h2>Create Listing</h2>
+       {/* Content of your CreateListing page */}
+     </div>
+   </div>
+ );
 }
+
 
 export default CreateListing;
