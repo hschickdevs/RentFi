@@ -1,4 +1,13 @@
-import Web3 from "web3";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import './App.css';
+import MetaMask from './MetaMask';
+import CreateListing from './createListing';
+import Ledger from './ledger';
+import Sign from './sign';
+import Web3 from 'web3';
+
+
 // Contract ABI and address
 var contractABI = [
   {
@@ -482,6 +491,20 @@ function displayProperties(properties) {
   });
 }
 
+function Main() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/metamask" element={<MetaMask />} />
+        <Route path="/createListing" element={<CreateListing />} />
+        <Route path="/" element={<App />} />
+        <Route path="/ledger" element={<Ledger />} />
+        <Route path="/sign" element={<Sign />} />
+      </Routes>
+    </Router>
+  );
+}
+
 function App() {
   // Function to handle the button click event and redirect to MetaMask component
   const handleLogin = () => {
@@ -522,4 +545,4 @@ function App() {
   );
 }
 
-export default App;
+export default Main;
