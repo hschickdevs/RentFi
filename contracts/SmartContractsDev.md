@@ -9,40 +9,58 @@ The `LeaseAgreementFactory` contract serves as a factory for creating, activatin
 ### Functions
 
 1. **createLeaseContract**
-   - Description: Creates a new lease contract for a specified property.
-   - Inputs:
-     - `tokenId`: The token ID of the property to be leased.
+   - **Description**: Creates a new lease contract for a specified property.
+   - **Inputs**:
+     - `tokenId`: The token ID of the property to be leased, token ID that has not been listed.
      - `rentalPrice`: The rental price per payment period.
      - `depositAmount`: The amount of deposit required to secure the lease.
      - `leaseDuration`: The duration of the lease in payment periods.
-   - Output: The address of the newly created lease contract.
+   - **Output**: The address of the newly created lease contract.
 
 2. **activateLease**
-   - Description: Activates a lease by setting a tenant and transferring the required deposit.
-   - Inputs:
+   - **Description**: Activates a lease by setting a tenant (the owner cannot be set as a tenant) and transferring the required deposit.
+   - **Inputs**:
      - `tokenId`: The token ID of the property whose lease is to be activated.
-     - `tenant`: The address of the tenant who will occupy the property.
-   - This function requires the caller to send an amount of Ether equal to the `depositAmount`.
+   - **Requirements**: The function requires the caller to send an amount of Ether equal to the deposit specified in the lease contract.
 
 3. **payRent**
-   - Description: Allows a tenant to make a rental payment for an active lease.
-   - Input:
+   - **Description**: Allows a tenant to make a rental payment for an active lease.
+   - **Input**:
      - `tokenId`: The token ID of the property for which rent is being paid.
-   - This function requires the caller to send an amount of Ether equal to the `rentalPrice`.
+   - **Requirements**: The caller must send an amount of Ether equal to the rental price as specified in the lease contract.
 
 4. **updateLeaseStatus**
-   - Description: Updates the state of a lease agreement.
-   - Inputs:
+   - **Description**: Updates the state of a lease agreement.
+   - **Inputs**:
      - `tokenId`: The token ID of the property whose lease state is to be updated.
      - `newState`: The new state to set for the lease (Pending, Active, Inactive).
 
 5. **listAllProperties**
-   - Description: Lists all properties registered within the factory.
-   - Output: An array of all registered property listings, each containing the following fields:
+   - **Description**: Lists all properties registered within the factory.
+   - **Output**: An array of all registered property listings. Each listing contains:
      - `tokenId`: The token ID of the property.
      - `leaseContract`: The address of the deployed lease contract for this property.
      - `owner`: The owner of the property.
      - `state`: The current state of the lease (Pending, Active, Inactive).
+
+6. **listAllPropertiesDetailed**
+   - **Description**: Provides detailed listings of all properties managed by the factory, including additional details about each lease.
+   - **Output**: An array of detailed property listings. Each detailed listing includes:
+     - `tokenId`: The token ID of the property.
+     - `leaseContract`: The address of the deployed lease contract.
+     - `owner`: The owner of the property.
+     - `state`: The current state of the lease.
+     - `tenant`: The address of the tenant.
+     - `rentalPrice`: The rental price per payment period.
+     - `depositAmount`: The deposit required to secure the lease.
+     - `leaseDuration`: The duration of the lease.
+
+7. **getLeaseInfo**
+   - **Description**: Retrieves detailed information about a specific lease by its property token ID.
+   - **Input**:
+     - `tokenId`: The token ID of the property to query.
+   - **Output**: Detailed information about the lease, including the lease contract address, tenant (if any), rental price, deposit amount, lease duration, and current lease state.
+
 
 ### Events
 
