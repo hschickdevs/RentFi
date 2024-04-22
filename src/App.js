@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import CreateListing from './createListing';
-import Ledger from './ledger';
-import Sign from './sign';
+import Home from './Home';
 import Navbar from './Navbar';
 import Web3 from 'web3';
-import PropertyList from './PropertyList';
+
 
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -522,36 +521,39 @@ function App() {
     ));
   };
 
-
   return (
-    <Router>
-      <Navbar />
-      <div className="container mt-3 text-center" style={{ marginTop: '50px' }}>
-        {!isWalletConnected && (
-          <>
-            <h2>Connect your MetaMask wallet.</h2>
-            <div className="d-flex justify-content-center">
-              <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
+        <Router>
+          <Navbar />
+          <div className="container mt-3 text-center">
+            {!isWalletConnected && (
+              <div>
+                <h2>Connect your MetaMask wallet.</h2>
+                <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
+              </div>
+            )}
+            {isWalletConnected && defaultAccount && (
+  <h3 style={{ fontSize: 'smaller' }}>Your account {defaultAccount} is successfully connected.</h3>
+)}
+            {errorMessage && <p>{errorMessage}</p>}
+            <h2>All Listings</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
+              <div className="grid-item">1</div>
+              <div className="grid-item">2</div>
+              <div className="grid-item">3</div>
+              <div className="grid-item">4</div>
+              <div className="grid-item">5</div>
+              <div className="grid-item">6</div>
+              <div className="grid-item">7</div>
+              <div className="grid-item">8</div>
+              <div className="grid-item">9</div>
             </div>
-          </>
-        )}
-        {isWalletConnected && defaultAccount && (
-          <h3 style={{ fontSize: 'smaller' }}>Your account {defaultAccount} is successfully connected.</h3>
-        )}
-        {errorMessage && <p>{errorMessage}</p>}
-      </div>
-      <Routes>
-        <Route path="/createListing" element={<CreateListing />} />
-        <Route path="/ledger" element={<Ledger />} />
-        <Route path="/sign" element={<Sign />} />
-        <Route path="/" element={<PropertyList propertiesArr={properties} />} />
-      </Routes>
-      <h2>Listings</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
-        {displayProperties()}
-      </div>
-    </Router>
-  );
-}
-
-export default App;
+          </div>
+          <Routes>
+            <Route path="/Home" element={<Home />} />
+            <Route path="/createListing" element={<CreateListing />} />
+          </Routes>
+        </Router>
+      );
+    }
+    
+    export default App;
