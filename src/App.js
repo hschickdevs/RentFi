@@ -540,16 +540,13 @@ function App() {
         )}
         {errorMessage && <p>{errorMessage}</p>}
       </div>
+      <h2>Listings</h2>
       <Routes>
         <Route path="/createListing" element={<CreateListing />} />
         <Route path="/ledger" element={<Ledger />} />
         <Route path="/sign" element={<Sign />} />
         <Route path="/" element={<PropertyList propertiesArr={properties} />} />
       </Routes>
-      <h2>Listings</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
-        {displayProperties()}
-      </div>
     </Router>
   );
 }
