@@ -524,33 +524,26 @@ function App() {
   return (
         <Router>
           <Navbar />
-          <div className="container mt-3 text-center">
-            {!isWalletConnected && (
-              <div>
-                <h2>Connect your MetaMask wallet.</h2>
-                <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
-              </div>
-            )}
-            {isWalletConnected && defaultAccount && (
-  <h3 style={{ fontSize: 'smaller' }}>Your account {defaultAccount} is successfully connected.</h3>
-)}
-            {errorMessage && <p>{errorMessage}</p>}
-            <h2>All Listings</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
-              <div className="grid-item">1</div>
-              <div className="grid-item">2</div>
-              <div className="grid-item">3</div>
-              <div className="grid-item">4</div>
-              <div className="grid-item">5</div>
-              <div className="grid-item">6</div>
-              <div className="grid-item">7</div>
-              <div className="grid-item">8</div>
-              <div className="grid-item">9</div>
-            </div>
-          </div>
           <Routes>
-            <Route path="/Home" element={<Home />} />
+            <Route path="/" element={
+              <>
+                <div className="container mt-3 text-center">
+                  {!isWalletConnected && (
+                    <div>
+                      <h2>Connect your MetaMask wallet.</h2>
+                      <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
+                    </div>
+                  )}
+                  {isWalletConnected && defaultAccount && (
+                    <h3 style={{ fontSize: 'smaller' }}>Your account {defaultAccount} is successfully connected.</h3>
+                  )}
+                  {errorMessage && <p>{errorMessage}</p>}
+                </div>
+                <Home properties={properties} />
+              </>
+            } />
             <Route path="/createListing" element={<CreateListing />} />
+            {/* ... other routes */}
           </Routes>
         </Router>
       );

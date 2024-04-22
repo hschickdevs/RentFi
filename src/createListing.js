@@ -1,13 +1,22 @@
 import React from 'react';
-import './App.css';
-import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 function CreateListing() {
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Here, you would handle the form submission to the blockchain or server...
+
+    // After successful submission:
+    navigate('/'); // This will navigate back to the home page
+  };
+  
   return (
     <div>
       <div className="container mt-3">
         <h2>Create Listing</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="tokenId" className="form-label">Token ID</label>
             <input type="number" className="form-control" id="tokenId" placeholder="Enter token ID" required />
@@ -28,7 +37,7 @@ function CreateListing() {
             <input type="number" className="form-control" id="leaseDuration" placeholder="Enter lease duration" required />
             <div className="form-text">Define the duration of the lease in payment periods.</div>
           </div>
-          <button type="submit" className="btn btn-primary">Create Listing</button>
+          <button type="submit" className="btn btn-primary">Submit Listing</button>
         </form>
       </div>
     </div>
