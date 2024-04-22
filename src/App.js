@@ -6,14 +6,13 @@ import MetaMask from './MetaMask';
 import CreateListing from './createListing';
 import Ledger from './ledger';
 import Sign from './sign';
-import Navbar from './Navbar';
 
 
 function App() {
  return (
    <div>
      <Navbar />
-     <h2>Available Listings</h2>
+     <h2>  Listings</h2>
      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
        <div className="grid-item">1</div>
        <div className="grid-item">2</div>
