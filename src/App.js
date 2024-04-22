@@ -6,6 +6,7 @@ import MetaMask from './MetaMask';
 import CreateListing from './createListing';
 import Ledger from './ledger';
 import Sign from './sign';
+import Navbar from './Navbar';
 
 
 function App() {

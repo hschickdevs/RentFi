@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';
 import { ethers } from 'ethers';
+import Navbar from './Navbar';
 
 const MetaMask = () => {
     const [errorMessage, setErrorMessage] = useState(null);
@@ -32,7 +32,7 @@ const MetaMask = () => {
     const getUserBalance = (accountAddress) => {
         window.ethereum.request({ method: 'eth_getBalance', params: [String(accountAddress), "latest"] })
             .then(balance => {
-                setUserBalance(ethers.utils.formatEther(balance));
+                setUserBalance(ethers.formatUnits(balance));
             })
             .catch(error => {
                 setErrorMessage(error.message);
@@ -52,7 +52,7 @@ const MetaMask = () => {
                     </>
                 )}
                 {isWalletConnected && defaultAccount && (
-                    <h3 style={{ fontSize: 'smaller' }}>Your Account {defaultAccount} is successfully connected. Your balance is {userBalance} ETH</h3>
+                    <h3 style={{ fontSize: 'smaller' }}>Your Account {defaultAccount} is successfully connected. Your balance is {userBalance} MIS</h3>
                 )}
                 {errorMessage && <p>{errorMessage}</p>}
             </div>
