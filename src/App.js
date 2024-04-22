@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import CreateListing from './createListing';
-import Ledger from './ledger';
-import Sign from './sign';
+import Home from './Home';
 import Navbar from './Navbar';
 import Web3 from 'web3';
-import PropertyList from './PropertyList';
+
 
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -521,7 +520,6 @@ function App() {
       </div>
     ));
   };
-
 
   return (
     <Router>
