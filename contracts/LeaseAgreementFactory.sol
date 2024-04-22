@@ -4,14 +4,16 @@ pragma solidity ^0.8.20;
 // Importing the RC721 to interact with NFTs
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol"; 
 
-// Importing the residential lease agreement contract
+// Importing the local interfaces
 import "./ResidentialLeaseAgreement.sol";
 import "./PropertyRegistryNFT.sol";
+import "./RentFiToken.sol";
 
 // The factory contract that creates and tracks lease agreements
 contract LeaseAgreementFactory {
     // The NFT registry interface, used to check ownership of properties
     ERC721 public propertyRegistry;
+    IERC20 public utilityToken;
 
     //Define lease states
     enum LeaseState {Pending, Active, Inactive}
@@ -48,10 +50,10 @@ contract LeaseAgreementFactory {
     event LeaseStateChanged(address indexed leaseAddress, uint256 indexed tokenId, LeaseState newState);
 
     // Constructor to set the property registry address
-    constructor(address _propertyRegistry) {
+    constructor(address _propertyRegistry, address _utilityToken) {
         // propertyRegistry = IERC721(_propertyRegistry);
+        utilityToken = IERC20(_utilityToken);
         propertyRegistry = ERC721(_propertyRegistry);
-
     }
 
     mapping(uint256 => uint256) public tokenIdToIndex;
@@ -71,7 +73,7 @@ contract LeaseAgreementFactory {
 
         // Check if a lease already exists for this tokenId
         require(tokenIdToIndex[tokenId] == 0 && propertyRegistry.ownerOf(tokenId) != address(0), "Lease already exists for this tokenId or tokenId is invalid");
-        
+
         // Create a new lease agreement contract
         ResidentialLeaseAgreement newLease = new ResidentialLeaseAgreement(tokenId, rentalPrice, depositAmount, leaseDuration, payable(owner));
         // Using length+1 to shift index to start from 1
@@ -85,7 +87,7 @@ contract LeaseAgreementFactory {
         tokenIdToIndex[tokenId] = allProperties.length - 1;
         // Emit an event for the creation of the lease
         emit LeaseCreated(address(newLease), tokenId, owner, false);
-        
+
         // Return the address of the new lease contract
         return address(newLease);
     }
@@ -95,47 +97,66 @@ contract LeaseAgreementFactory {
     //  * @param tokenId Token ID of the property whose lease is to be activated.
     //  * @param tenant Address of the tenant who will occupy the property.
     //  */
-
-    function activateLease(uint256 tokenId) public payable {
+    function activateLease(uint256 tokenId) public {
         uint256 index = tokenIdToIndex[tokenId];
         PropertyListing storage listing = allProperties[index];
-        
-        // Check that the deposit amount is correct
-        require(msg.value == ResidentialLeaseAgreement(listing.leaseContract).depositAmount(), "Incorrect deposit amount");
+
+        // Check that the required deposit amount is allowed to be transferred from the tenant to this contract
+        uint256 depositAmount = ResidentialLeaseAgreement(listing.leaseContract).depositAmount();
+        require(utilityToken.allowance(msg.sender, address(this)) >= depositAmount, "Deposit amount not approved for transfer");
+
+        // Transfer the deposit to this contract
+        require(utilityToken.transferFrom(msg.sender, address(this), depositAmount), "Failed to transfer deposit tokens");
+
+        // Transfer the deposit from this contract to the property owner
+        require(utilityToken.transfer(listing.owner, depositAmount), "Failed to transfer deposit to owner");
+
         // Ensure the lease is in a state that can be activated
         require(listing.state == LeaseState.Pending, "Lease cannot be activated from its current state");
+
         // Check that the caller is not the owner of the property
         require(msg.sender != listing.owner, "Owner cannot be the tenant");
-        
-        // Transfer the deposit to the property owner directly
-        payable(listing.owner).transfer(msg.value);  
-        
+
         // Set the caller as the tenant
         ResidentialLeaseAgreement(listing.leaseContract).setTenant(msg.sender);
         listing.state = LeaseState.Active;
+
         emit LeaseActivated(listing.leaseContract, msg.sender, listing.tokenId, true);
     }
 
+
     /**
-     * @dev Allows a tenant to make a rental payment for an active lease.
-     * @param tokenId Token ID of the property for which rent is being paid.
-     */
-    function payRent(uint256 tokenId) public payable {
+    * @dev Allows a tenant to make a rental payment for an active lease using RentFi tokens.
+    * @param tokenId Token ID of the property for which rent is being paid.
+    */
+    function payRent(uint256 tokenId) public {
         uint256 index = tokenIdToIndex[tokenId];
         PropertyListing storage listing = allProperties[index];
-        require(listing.state == LeaseState.Active, "Lease is not active");
-        require(msg.value == ResidentialLeaseAgreement(listing.leaseContract).rentalPrice(), "Incorrect rent amount");
 
-        payable(listing.owner).transfer(msg.value);
-        emit RentPaid(listing.leaseContract, msg.value, block.timestamp);
+        // Ensure the lease is active
+        require(listing.state == LeaseState.Active, "Lease is not active");
+
+        // Retrieve the rental price from the lease agreement
+        uint256 rentalPrice = ResidentialLeaseAgreement(listing.leaseContract).rentalPrice();
+
+        // Check that the required rent amount is approved for transfer from the tenant to this contract
+        require(utilityToken.allowance(msg.sender, address(this)) >= rentalPrice, "Rent amount not approved for transfer");
+
+        // Transfer the rent to this contract
+        require(utilityToken.transferFrom(msg.sender, address(this), rentalPrice), "Failed to transfer rent tokens");
+
+        // Transfer the rent from this contract to the property owner
+        require(utilityToken.transfer(listing.owner, rentalPrice), "Failed to transfer rent to owner");
+
+        emit RentPaid(listing.leaseContract, rentalPrice, block.timestamp);
     }
+
 
 
     // /**
     //  * @dev Lists all properties registered within the factory.
     //  * @return An array of all registered property listings.
     //  */
-
     function listAllProperties() public view returns (PropertyListing[] memory) {
         // Check if the array has only the dummy element or is empty
         if (allProperties.length <= 1) {
@@ -158,7 +179,6 @@ contract LeaseAgreementFactory {
     * @return An array of DetailedPropertyListing structures containing comprehensive details about each registered property.
     * This function iterates through all property listings stored in the contract, retrieves the associated lease agreement details using the lease contract address, and constructs a detailed listing for each property.
     */
-
     function listAllPropertiesDetailed() public view returns (DetailedPropertyListing[] memory) {
         // Check if the array has only the dummy element or is empty
         if (allProperties.length <= 1) {
@@ -199,7 +219,6 @@ contract LeaseAgreementFactory {
     //  * @param tokenId Token ID of the property to query.
     //  * @return A tuple containing details about the lease including the lease contract address, tenant (if any), rental price, deposit amount, lease duration, and current state.
     //  */
-
     function getLeaseInfo(uint256 tokenId) public view returns (address leaseContract, address tenant, uint256 rentalPrice, uint256 depositAmount, uint256 leaseDuration, LeaseState state) {
         uint256 index = tokenIdToIndex[tokenId];
         PropertyListing storage listing = allProperties[index];
@@ -237,10 +256,4 @@ contract LeaseAgreementFactory {
     function getNFTowner(uint256 tokenId) public view returns (address NFTowner) {
         return propertyRegistry.ownerOf(tokenId);
     }
-
-    
-
-
-
-
 }
