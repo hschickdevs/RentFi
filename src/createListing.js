@@ -5,7 +5,6 @@ import Navbar from './Navbar';
 function CreateListing() {
   return (
     <div>
-      <Navbar />
       <div className="container mt-3">
         <h2>Create Listing</h2>
         <form>
