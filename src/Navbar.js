@@ -16,7 +16,6 @@ const Navbar = () => {
        </NavLink>
        <div className="navbar-nav ml-auto">
          <NavLink className="nav-item nav-link" to="/createListing">Create Listing</NavLink>
-         <NavLink className="nav-item nav-link" to="/properties">Properties</NavLink>
        </div>
      </div>
    </nav>
