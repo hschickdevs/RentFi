@@ -7,6 +7,7 @@ import Ledger from './ledger';
 import Sign from './sign';
 import Navbar from './Navbar';
 import Web3 from 'web3';
+import PropertyList from './PropertyList';
 
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -14,7 +15,7 @@ function App() {
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [web3Instance, setWeb3Instance] = useState(null);
   const [properties, setProperties] = useState([]);
-
+  
   // Contract ABI and address
   // Contract ABI and address
   const contractABI = [  {
@@ -521,6 +522,7 @@ function App() {
     ));
   };
 
+
   return (
     <Router>
       <Navbar />
@@ -542,6 +544,7 @@ function App() {
         <Route path="/createListing" element={<CreateListing />} />
         <Route path="/ledger" element={<Ledger />} />
         <Route path="/sign" element={<Sign />} />
+        <Route path="/" element={<PropertyList propertiesArr={properties} />} />
       </Routes>
       <h2>Listings</h2>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
