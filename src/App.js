@@ -487,26 +487,29 @@ function App() {
   };
 
   const connectWalletHandler = () => {
-    let provider;
-    if (window.ethereum && window.ethereum.providers) {
-      provider = window.ethereum.providers.find(p => p.isMetaMask);
-    }
-    if (!provider && window.ethereum && window.ethereum.isMetaMask) {
-      provider = window.ethereum;
-    }
-    if (provider) {
-      provider.request({ method: 'eth_requestAccounts' })
-        .then(result => {
-          setDefaultAccount(result[0]);
-          setIsWalletConnected(true);
-        })
-        .catch(error => {
-          setErrorMessage('Something went wrong with accessing the MetaMask account.');
-        });
-    } else {
-      setErrorMessage('MetaMask is not installed. Please install MetaMask to use this app.');
-    }
-  };
+        let provider;
+        if (window.ethereum && window.ethereum.providers) {
+          provider = window.ethereum.providers.find(p => p.isMetaMask);
+        }
+        if (!provider && window.ethereum && window.ethereum.isMetaMask) {
+          provider = window.ethereum;
+        }
+        if (provider) {
+          provider.request({ method: 'eth_requestAccounts' })
+            .then(result => {
+              setDefaultAccount(result[0]);
+              setIsWalletConnected(true);
+              // Fetch data again after successful wallet connection
+              fetchData();
+            })
+            .catch(error => {
+              setErrorMessage('Something went wrong with accessing the MetaMask account.');
+            });
+        } else {
+          setErrorMessage('MetaMask is not installed. Please install MetaMask to use this app.');
+        }
+      };
+      
 
   const displayProperties = () => {
     return properties.map((property, index) => (
@@ -551,5 +554,7 @@ function App() {
 }
 
 export default App;
+
+
 
 
