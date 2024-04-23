@@ -73,3 +73,7 @@ const PropertyList = ({ propertiesArr }) => {
 };
 
 export default PropertyList;
+
+
+
+

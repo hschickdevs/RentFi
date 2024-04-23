@@ -28,4 +28,3 @@ function Home({ properties }) {
 }
 
 export default Home;
-

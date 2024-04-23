@@ -9,6 +9,7 @@ import Navbar from './Navbar';
 import Web3 from 'web3';
 import PropertyList from './PropertyList';
 
+
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
@@ -551,5 +552,3 @@ function App() {
 }
 
 export default App;
-
-
