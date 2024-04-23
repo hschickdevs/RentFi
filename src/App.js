@@ -9,16 +9,13 @@ import Navbar from './Navbar';
 import Web3 from 'web3';
 import PropertyList from './PropertyList';
 
-
-
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
   const [web3Instance, setWeb3Instance] = useState(null);
   const [properties, setProperties] = useState([]);
-  
-  // Contract ABI and address
+
   // Contract ABI and address
   const contractABI = [  {
     "inputs": [
@@ -554,4 +551,5 @@ function App() {
 }
 
 export default App;
+
 

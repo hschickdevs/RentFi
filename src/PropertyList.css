@@ -1,0 +1,35 @@
+/* property.css */
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-item {
+    position: relative;
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    color: #000;
+    display: none;
+}
+
+.grid-item:hover .overlay {
+    display: block;
+}
