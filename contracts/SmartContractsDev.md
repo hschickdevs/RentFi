@@ -2,6 +2,8 @@
 
 This documentation outlines the functionality and usage of two Solidity smart contracts: `LeaseAgreementFactory` and `ResidentialLeaseAgreement`. These contracts provide a blockchain-based solution for managing residential lease agreements.
 
+> **View the Live Deployments Here:** https://swift-petalite-92f.notion.site/Factory-d634152eb7b94a01a23bbe3957a78660
+
 ## LeaseAgreementFactory Contract
 
 The `LeaseAgreementFactory` contract serves as a factory for creating, activating, and managing lease agreements.

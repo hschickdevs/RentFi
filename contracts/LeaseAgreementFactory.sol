@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-// Importing the RC721 to interact with NFTs
+// Importing the ERC721 to interact with NFTs
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol"; 
 
 // Importing the local interfaces
 import "./ResidentialLeaseAgreement.sol";
-import "./PropertyRegistryNFT.sol";
 import "./RentFiToken.sol";
 
 // The factory contract that creates and tracks lease agreements
