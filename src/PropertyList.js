@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import Navbar from './Navbar';
 
 const PropertyList = ({ propertiesArr }) => {
     const [nftDataList, setNftDataList] = useState([]);
@@ -42,7 +41,6 @@ const PropertyList = ({ propertiesArr }) => {
 
     return (
         <>
-          <Navbar />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
             {propertiesArr.map((property, index) => (
               <NavLink to={`/properties/${property.tokenId}`} key={index} style={{ textDecoration: 'none' }}>
