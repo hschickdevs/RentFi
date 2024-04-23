@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const PropertyList = ({ propertiesArr }) => {
     const [nftDataList, setNftDataList] = useState([]);
@@ -39,41 +41,40 @@ const PropertyList = ({ propertiesArr }) => {
     
 
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
+        <>
+          <Navbar />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'center' }}>
             {propertiesArr.map((property, index) => (
-                <div className="grid-item" key={index} style={{ position: 'relative' }}>
-                    {nftDataList[index] && (
-                        <div style={{ position: 'relative' }}>
-                            <button onClick={handleClick} style={{ border: 'none', padding: 0, background: 'none', cursor: 'pointer' }}>
-                                <img
-                                    src={nftDataList[index].images[0]}
-                                    alt="Property"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    onMouseEnter={() => handleMouseEnter(index)}
-                                    onMouseLeave={handleMouseLeave}
-                                />
-                                {hoveredIndex === index && (
-                                    <div style={{ position: 'absolute', top: 0, left: 0, padding: '10px', background: 'rgba(255, 255, 255, 0.7)', color: '#000' }}>
-                                        <p>Token ID: {property.tokenId.toString()}</p>
-                                        <p>Owner: {property.owner.toString()}</p>
-                                        <p>Status: {property.state.toString()}</p>
-                                        <p>Lease Price: {property.rentalPrice.toString()}</p>
-                                        <p>Deposit: {property.depositAmount.toString()}</p>
-                                        <p>Duration: {property.leaseDuration.toString()}</p>
-                                        <p>Tenant Address: {property.tenant}</p>
-                                    </div>
-                                )}
-                            </button>
+              <NavLink to={`/properties/${property.tokenId}`} key={index} style={{ textDecoration: 'none' }}>
+                <div className="grid-item" style={{ position: 'relative' }}>
+                  {nftDataList[index] && (
+                    <div style={{ position: 'relative' }}>
+                      <img
+                        src={nftDataList[index].images[0]}
+                        alt="Property"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onMouseEnter={() => handleMouseEnter(index)}
+                        onMouseLeave={handleMouseLeave}
+                      />
+                      {hoveredIndex === index && (
+                        <div style={{ position: 'absolute', top: 0, left: 0, padding: '10px', background: 'rgba(255, 255, 255, 0.7)', color: '#000' }}>
+                          <p>Token ID: {property.tokenId.toString()}</p>
+                          <p>Owner: {property.owner.toString()}</p>
+                          <p>Status: {property.state.toString()}</p>
+                          <p>Lease Price: {property.rentalPrice.toString()}</p>
+                          <p>Deposit: {property.depositAmount.toString()}</p>
+                          <p>Duration: {property.leaseDuration.toString()}</p>
+                          <p>Tenant Address: {property.tenant}</p>
                         </div>
-                    )}
+                      )}
+                    </div>
+                  )}
                 </div>
+              </NavLink>
             ))}
-        </div>
-    );
-};
-
-export default PropertyList;
-
-
-
-
+          </div>
+        </>
+      );
+    };
+    
+    export default PropertyList;

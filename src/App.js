@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import CreateListing from './createListing';
@@ -8,7 +8,6 @@ import Sign from './sign';
 import Navbar from './Navbar';
 import Web3 from 'web3';
 import PropertyList from './PropertyList';
-
 
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -449,109 +448,56 @@ function App() {
   ];
   const contractAddress = '0x11D1454A00095c398b88F1A93DD2B0c9A560E62A'; // Contract address from version 2
 
-  useEffect(() => {
-    fetchData();
-    initializeWeb3();
-  }, []);
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
-  const initializeWeb3 = async () => {
-    if (window.ethereum) {
+  const fetchData = async (web3) => {
+    const contract = new web3.eth.Contract(contractABI, contractAddress);
+    try {
+      const result = await contract.methods.listAllPropertiesDetailed().call();
+      setProperties(result);
+    } catch (error) {
+      console.error('Error retrieving properties:', error);
+    }
+  };
+
+  const connectWalletHandler = async () => {
+    let provider = window.ethereum;
+    if (provider) {
       try {
-        if (window.ethereum.request) {
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-        } else {
-          await window.ethereum.send('eth_requestAccounts');
-        }
-        const web3 = new Web3(window.ethereum);
+        await provider.request({ method: 'eth_requestAccounts' });
+        const web3 = new Web3(provider);
         setWeb3Instance(web3);
+        setIsWalletConnected(true);
+        fetchData(web3); // Fetch data after connecting
+        navigate('/properties'); // Navigate to properties after successful connection
       } catch (error) {
-        console.error('Error initializing web3:', error);
-        // Handle error gracefully
+        setErrorMessage('Error connecting to MetaMask: ' + error.message);
       }
     } else {
-      console.error('No Ethereum provider detected');
+      setErrorMessage('MetaMask is not installed. Please install MetaMask to use this app.');
     }
   };
-
-  const fetchData = async () => {
-    if (web3Instance) {
-      const contract = new web3Instance.eth.Contract(contractABI, contractAddress);
-      try {
-        const result = await contract.methods.listAllPropertiesDetailed().call();
-        setProperties(result);
-      } catch (error) {
-        console.error('Error retrieving properties:', error);
-      }
-    } else {
-      console.error('Web3 is not initialized');
-    }
-  };
-
-  const connectWalletHandler = () => {
-        let provider;
-        if (window.ethereum && window.ethereum.providers) {
-          provider = window.ethereum.providers.find(p => p.isMetaMask);
-        }
-        if (!provider && window.ethereum && window.ethereum.isMetaMask) {
-          provider = window.ethereum;
-        }
-        if (provider) {
-          provider.request({ method: 'eth_requestAccounts' })
-            .then(result => {
-              setDefaultAccount(result[0]);
-              setIsWalletConnected(true);
-              // Fetch data again after successful wallet connection
-              fetchData();
-            })
-            .catch(error => {
-              setErrorMessage('Something went wrong with accessing the MetaMask account.');
-            });
-        } else {
-          setErrorMessage('MetaMask is not installed. Please install MetaMask to use this app.');
-        }
-      };
-      
-
-  const displayProperties = () => {
-    return properties.map((property, index) => (
-      <div className="grid-item" key={index}>
-        <div>{property.tokenId}</div>
-        <div>{property.NftUri}</div>
-        <div>{property.leaseContract}</div>
-        <div>{property.owner}</div>
-        <div>{property.state}</div>
-        {/* Add other property details here */}
-      </div>
-    ));
-  };
-
 
   return (
-    <Router>
-      <Navbar />
-      <div className="container mt-3 text-center" style={{ marginTop: '50px' }}>
-        {!isWalletConnected && (
-          <>
-            <h2>Connect your MetaMask wallet.</h2>
-            <div className="d-flex justify-content-center">
-              <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
-            </div>
-          </>
-        )}
-        {isWalletConnected && defaultAccount && (
-          <h3 style={{ fontSize: 'smaller' }}>Your account {defaultAccount} is successfully connected.</h3>
-        )}
-        {errorMessage && <p>{errorMessage}</p>}
-      </div>
-      <h2>Listings</h2>
-      <Routes>
-        <Route path="/createListing" element={<CreateListing />} />
-        <Route path="/ledger" element={<Ledger />} />
-        <Route path="/sign" element={<Sign />} />
-        <Route path="/" element={<PropertyList propertiesArr={properties} />} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
+        <>
+          <Navbar />
+          <div className="container mt-3 text-center">
+            {!isWalletConnected && (
+              <>
+                <h2>Connect your MetaMask wallet.</h2>
+                <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
+                {errorMessage && <p>{errorMessage}</p>}
+              </>
+            )}
+          </div>
+          <Routes>
+            <Route path="/createListing" element={<CreateListing />} />
+            <Route path="/ledger" element={<Ledger />} />
+            <Route path="/sign" element={<Sign />} />
+            <Route path="/properties" element={<PropertyList propertiesArr={properties} />} />
+          </Routes>
+        </>
+      );
+    }
+    
+    export default App;
