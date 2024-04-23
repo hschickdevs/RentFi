@@ -3,10 +3,10 @@
 pragma solidity ^0.8.20;
 
 // Importing necessary components from the OpenZeppelin Contracts library
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol";
+import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/access/Ownable.sol";
+import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
 // The contract is inheriting from ERC721, ERC721URIStorage, and Ownable
 contract PropertyRegistryNFT is ERC721, ERC721URIStorage, Ownable {
