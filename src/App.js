@@ -8,6 +8,7 @@ import Sign from './sign';
 import Navbar from './Navbar';
 import Web3 from 'web3';
 import PropertyList from './PropertyList';
+import PropertyDetails from './PropertyDetails';
 
 function App() {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -495,6 +496,7 @@ function App() {
             <Route path="/ledger" element={<Ledger />} />
             <Route path="/sign" element={<Sign />} />
             <Route path="/properties" element={<PropertyList propertiesArr={properties} />} />
+            <Route path="/properties/:tokenId" element={<PropertyDetails />} />
           </Routes>
         </>
       );
