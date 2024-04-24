@@ -470,7 +470,8 @@ function App() {
         setWeb3Instance(web3);
         setIsWalletConnected(true);
         fetchData(web3); // Fetch data after connecting
-        navigate('/properties'); // Navigate to properties after successful connection
+        const loginSuccessMessage = 'Your account has successfully been logged in.';
+        navigate('/properties', { state: { loginSuccess: true, loginSuccessMessage: loginSuccessMessage } });
       } catch (error) {
         setErrorMessage('Error connecting to MetaMask: ' + error.message);
       }
