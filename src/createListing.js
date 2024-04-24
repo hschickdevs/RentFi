@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Web3 from 'web3';
 import { LEASEAGREEMENTFACTORY_ADDRESS, LEASEAGREEMENTFACTORY_ABI } from './contracts/LeaseAgreementFactory.js';
@@ -7,8 +7,21 @@ import { LEASEAGREEMENTFACTORY_ADDRESS, LEASEAGREEMENTFACTORY_ABI } from './cont
 function CreateListing() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault(); // Prevents the default form submission behavior.
+  // State hooks to store form field values
+  const [tokenId, setTokenId] = useState('');
+  const [rentalPrice, setRentalPrice] = useState('');
+  const [depositAmount, setDepositAmount] = useState('');
+  const [leaseDuration, setLeaseDuration] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Here, you would handle the form submission to the blockchain or server...
+    const listingData = {
+      tokenId: parseInt(tokenId),
+      rentalPrice: parseInt(rentalPrice),
+      depositAmount: parseInt(depositAmount),
+      leaseDuration: parseInt(leaseDuration),
+    };
 
     // Assuming 'window.ethereum' is available in the global scope.
     let provider = window.ethereum;
@@ -19,12 +32,6 @@ function CreateListing() {
 
         // Create an instance of Web3 using the provider
         const web3 = new Web3(provider);
-
-        // ----- TEMPORARY ----- Define the inputs for the smart contract function.
-        const tokenId = 7; // Example tokenId
-        const rentalPrice = web3.utils.toWei('1', 'ether'); // Example rental price in ether
-        const depositAmount = web3.utils.toWei('0.1', 'ether'); // Example deposit in ether
-        const leaseDuration = 12; // Lease duration in months, example value
 
         // Create a new contract instance with the provided ABI and address
         const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
@@ -56,7 +63,6 @@ function CreateListing() {
     }
   };
 
-
   return (
     <div>
       <div className="container mt-3">
@@ -64,22 +70,54 @@ function CreateListing() {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="tokenId" className="form-label">Token ID</label>
-            <input type="number" className="form-control" id="tokenId" placeholder="Enter token ID" required />
+            <input
+              type="number"
+              className="form-control"
+              id="tokenId"
+              placeholder="Enter token ID"
+              required
+              value={tokenId}
+              onChange={(e) => setTokenId(e.target.value)}
+            />
             <div className="form-text">Enter the token ID of the property to be leased that has not been listed.</div>
           </div>
           <div className="mb-3">
             <label htmlFor="rentalPrice" className="form-label">Rental Price</label>
-            <input type="number" className="form-control" id="rentalPrice" placeholder="Enter rental price per period" required />
+            <input
+              type="number"
+              className="form-control"
+              id="rentalPrice"
+              placeholder="Enter rental price per period"
+              required
+              value={rentalPrice}
+              onChange={(e) => setRentalPrice(e.target.value)}
+            />
             <div className="form-text">Set the rental price per payment period.</div>
           </div>
           <div className="mb-3">
             <label htmlFor="depositAmount" className="form-label">Deposit Amount</label>
-            <input type="number" className="form-control" id="depositAmount" placeholder="Enter deposit amount" required />
+            <input
+              type="number"
+              className="form-control"
+              id="depositAmount"
+              placeholder="Enter deposit amount"
+              required
+              value={depositAmount}
+              onChange={(e) => setDepositAmount(e.target.value)}
+            />
             <div className="form-text">Specify the deposit required to secure the lease.</div>
           </div>
           <div className="mb-3">
             <label htmlFor="leaseDuration" className="form-label">Lease Duration</label>
-            <input type="number" className="form-control" id="leaseDuration" placeholder="Enter lease duration" required />
+            <input
+              type="number"
+              className="form-control"
+              id="leaseDuration"
+              placeholder="Enter lease duration"
+              required
+              value={leaseDuration}
+              onChange={(e) => setLeaseDuration(e.target.value)}
+            />
             <div className="form-text">Define the duration of the lease in payment periods.</div>
           </div>
           <button type="submit" className="btn btn-primary">Submit Listing</button>
