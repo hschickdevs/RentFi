@@ -52,12 +52,12 @@ const PropertyDetails = () => {
       <div style={{ width: '50%' }}>
         <h2 style={{ fontSize: '32px', fontWeight: 'normal', marginBottom: '10px', textAlign: 'center' }}>{propertyDetails.name}</h2>
         <div style={{ textAlign: 'left', padding: '0 20px' }}>
-          <p>Token ID: {property?.tokenId}</p>
+          <p>Token ID: {property?.tokenId.toString()}</p>
           <p>Owner: {property?.owner}</p>
-          <p>Status: {property?.state}</p>
-          <p>Lease Price: {property?.rentalPrice}</p>
-          <p>Deposit: {property?.depositAmount}</p>
-          <p>Duration: {property?.leaseDuration}</p>
+          <p>Status: {property?.state.toString()}</p>
+          <p>Lease Price: {property?.rentalPrice.toString()}</p>
+          <p>Deposit: {property?.depositAmount.toString()}</p>
+          <p>Duration: {property?.leaseDuration.toString()}</p>
           <p>Tenant Address: {property?.tenant}</p>
         </div>
         {/* ... other details ... */}
