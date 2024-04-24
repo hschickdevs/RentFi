@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import Web3 from 'web3';
+import { LEASEAGREEMENTFACTORY_ADDRESS, LEASEAGREEMENTFACTORY_ABI } from './contracts/LeaseAgreementFactory.js';
 
 const PropertyDetails = () => {
   const location = useLocation();
@@ -42,7 +44,49 @@ const PropertyDetails = () => {
     return <div>Property details not found.</div>;
   }
 
-  const handleSign = () => {
+  const handleSign = async () => {
+    // Assuming 'window.ethereum' is available in the global scope.
+    let provider = window.ethereum;
+
+    try {
+        // Request account access if needed
+        await provider.request({ method: 'eth_requestAccounts' });
+
+        // Create an instance of Web3 using the provider
+        const web3 = new Web3(provider);
+
+        // ----- TEMPORARY ----- Define the inputs for the smart contract function.
+        const tokenId = 7; // Example tokenId
+        const rentalPrice = web3.utils.toWei('1', 'ether'); // Example rental price in ether
+        const depositAmount = web3.utils.toWei('0.1', 'ether'); // Example deposit in ether
+        const leaseDuration = 12; // Lease duration in months, example value
+
+        // Create a new contract instance with the provided ABI and address
+        const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
+
+        // Get accounts from the provider
+        const accounts = await web3.eth.getAccounts();
+
+        // Check if we have accounts available
+        if (accounts.length === 0) {
+            throw new Error("No accounts available. Please connect to MetaMask.");
+        }
+
+        // Call the smart contract method with the provided parameters and send a transaction
+        const result = await contract.methods.activateLease(tokenId).send({ 
+                                                                      from: accounts[0],
+                                                                      gas: '1000000',
+                                                                      gasPrice: 1000000000
+                                                                    }); // Using the first account to send the transaction
+
+        // Log the transaction receipt to console
+        console.log('Transaction receipt:', result);
+
+        // Optionally navigate back to the home page or another appropriate page
+    } catch (error) {
+        // Log any errors that occur during the process
+        console.error('Error creating lease contract:', error);
+    }
     // TODO add function call to updateLeaseStatus from factory lease agreement
     // TODO add function call to activateLease
     // TODO add function call to take money from renter
@@ -66,6 +110,7 @@ const PropertyDetails = () => {
           <p>Deposit: {property?.depositAmount.toString()}</p>
           <p>Duration: {property?.leaseDuration.toString()}</p>
           <p>Tenant Address: {property?.tenant}</p>
+          <button>Approve=</button>
           <button onClick={handleSign}>Sign Lease</button>
         </div>
       </div>
