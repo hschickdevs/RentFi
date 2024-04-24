@@ -100,15 +100,12 @@ contract LeaseAgreementFactory {
         uint256 index = tokenIdToIndex[tokenId];
         PropertyListing storage listing = allProperties[index];
 
-        // Check that the required deposit amount is allowed to be transferred from the tenant to this contract
         uint256 depositAmount = ResidentialLeaseAgreement(listing.leaseContract).depositAmount();
-        require(utilityToken.allowance(msg.sender, address(this)) >= depositAmount, "Deposit amount not approved for transfer");
+        uint256 rentalPrice = ResidentialLeaseAgreement(listing.leaseContract).rentalPrice();
 
-        // Transfer the deposit to this contract
-        require(utilityToken.transferFrom(msg.sender, address(this), depositAmount), "Failed to transfer deposit tokens");
-
-        // Transfer the deposit from this contract to the property owner
-        require(utilityToken.transfer(listing.owner, depositAmount), "Failed to transfer deposit to owner");
+        // Transfer the deposit and first rent payment to this contract and then to the owner
+        require(utilityToken.allowance(msg.sender, listing.owner) >= depositAmount + rentalPrice, "Deposit + first rent amount not approved for transfer");
+        require(utilityToken.transferFrom(msg.sender, listing.owner, depositAmount + rentalPrice), "Failed to transfer deposit + rent tokens");
 
         // Ensure the lease is in a state that can be activated
         require(listing.state == LeaseState.Pending, "Lease cannot be activated from its current state");
