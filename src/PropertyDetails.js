@@ -42,6 +42,13 @@ const PropertyDetails = () => {
     return <div>Property details not found.</div>;
   }
 
+  const handleSign = () => {
+    // TODO add function call to updateLeaseStatus from factory lease agreement
+    // TODO add function call to activateLease
+    // TODO add function call to take money from renter
+    window.location.href = '/ledger'; // Directly changing the URL
+  };
+
   return (
     <div className="property-details" style={{ fontFamily: 'Arial, sans-serif', color: '#333', maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '20px' }}>
       <img
@@ -59,8 +66,8 @@ const PropertyDetails = () => {
           <p>Deposit: {property?.depositAmount.toString()}</p>
           <p>Duration: {property?.leaseDuration.toString()}</p>
           <p>Tenant Address: {property?.tenant}</p>
+          <button onClick={handleSign}>Sign Lease</button>
         </div>
-        {/* ... other details ... */}
       </div>
     </div>
   );
