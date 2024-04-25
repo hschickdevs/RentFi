@@ -13,60 +13,64 @@ function CreateListing() {
   const [depositAmount, setDepositAmount] = useState('');
   const [leaseDuration, setLeaseDuration] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here, you would handle the form submission to the blockchain or server...
-    const listingData = {
-      tokenId: parseInt(tokenId),
-      rentalPrice: parseInt(rentalPrice),
-      depositAmount: parseInt(depositAmount),
-      leaseDuration: parseInt(leaseDuration),
-    };
-
     // Assuming 'window.ethereum' is available in the global scope.
     let provider = window.ethereum;
 
     try {
-        // Request account access if needed
-        await provider.request({ method: 'eth_requestAccounts' });
+      // Request account access if needed
+      await provider.request({ method: 'eth_requestAccounts' });
 
-        // Create an instance of Web3 using the provider
-        const web3 = new Web3(provider);
+      // Create an instance of Web3 using the provider
+      const web3 = new Web3(provider);
 
-        // Create a new contract instance with the provided ABI and address
-        const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
+      const listingData = {
+        tokenId: parseInt(tokenId),
+        rentalPrice: web3.utils.toWei(parseFloat(rentalPrice), 'ether'),
+        depositAmount: web3.utils.toWei(parseFloat(depositAmount), 'ether'),
+        leaseDuration: parseInt(leaseDuration),
+      };
 
-        // Get accounts from the provider
-        const accounts = await web3.eth.getAccounts();
+      // Create a new contract instance with the provided ABI and address
+      const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
 
-        // Check if we have accounts available
-        if (accounts.length === 0) {
-            throw new Error("No accounts available. Please connect to MetaMask.");
-        }
+      // Get accounts from the provider
+      const accounts = await web3.eth.getAccounts();
 
-        // Call the smart contract method with the provided parameters and send a transaction
-        const result = await contract.methods.createLeaseContract(tokenId, rentalPrice, depositAmount, leaseDuration)
-                                              .send({ 
-                                                from: accounts[0],
-                                                gas: '1000000',
-                                                gasPrice: 1000000000
-                                               }); // Using the first account to send the transaction
+      // Check if we have accounts available
+      if (accounts.length === 0) {
+        throw new Error("No accounts available. Please connect to MetaMask.");
+      }
 
-        // Log the transaction receipt to console
-        console.log('Transaction receipt:', result);
+      console.log('Creating lease contract with the following data:', listingData)
 
-        // Optionally navigate back to the home page or another appropriate page
-        navigate('/'); // Assuming you have a navigation function set up
+      // Call the smart contract method with the provided parameters and send a transaction
+      const result = await contract.methods.createLeaseContract(
+        listingData.tokenId,
+        listingData.rentalPrice,
+        listingData.depositAmount,
+        listingData.leaseDuration).send({
+          from: accounts[0],
+          gas: '1000000',
+          gasPrice: 1000000000
+        }); // Using the first account to send the transaction
+
+      // Log the transaction receipt to console
+      console.log('Transaction receipt:', result);
+
+      // Optionally navigate back to the home page or another appropriate page
+      navigate(`/properties`);
     } catch (error) {
-        // Log any errors that occur during the process
-        console.error('Error creating lease contract:', error);
+      // Log any errors that occur during the process
+      console.error('Error creating lease contract:', error);
     }
   };
 
   return (
     <div>
       <div className="container mt-3">
-        <h2>Create Listing</h2>
+        <h1>Create Listing</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="tokenId" className="form-label">Token ID</label>
@@ -74,7 +78,7 @@ function CreateListing() {
               type="number"
               className="form-control"
               id="tokenId"
-              placeholder="Enter token ID"
+              placeholder="0"
               required
               value={tokenId}
               onChange={(e) => setTokenId(e.target.value)}
@@ -87,12 +91,12 @@ function CreateListing() {
               type="number"
               className="form-control"
               id="rentalPrice"
-              placeholder="Enter rental price per period"
+              placeholder="0"
               required
               value={rentalPrice}
               onChange={(e) => setRentalPrice(e.target.value)}
             />
-            <div className="form-text">Set the rental price per payment period.</div>
+            <div className="form-text">Enter monthly rental price (in RENT token)</div>
           </div>
           <div className="mb-3">
             <label htmlFor="depositAmount" className="form-label">Deposit Amount</label>
@@ -100,12 +104,12 @@ function CreateListing() {
               type="number"
               className="form-control"
               id="depositAmount"
-              placeholder="Enter deposit amount"
+              placeholder="0"
               required
               value={depositAmount}
               onChange={(e) => setDepositAmount(e.target.value)}
             />
-            <div className="form-text">Specify the deposit required to secure the lease.</div>
+            <div className="form-text">Specify the deposit required to secure the lease (in RENT token)</div>
           </div>
           <div className="mb-3">
             <label htmlFor="leaseDuration" className="form-label">Lease Duration</label>
@@ -113,14 +117,14 @@ function CreateListing() {
               type="number"
               className="form-control"
               id="leaseDuration"
-              placeholder="Enter lease duration"
+              placeholder="0"
               required
               value={leaseDuration}
               onChange={(e) => setLeaseDuration(e.target.value)}
             />
-            <div className="form-text">Define the duration of the lease in payment periods.</div>
+            <div className="form-text">Specify the duration of the lease (in months).</div>
           </div>
-          <button type="submit" className="btn btn-primary">Submit Listing</button>
+          <button type="submit" className="btn btn-primary connect-btn">Create Listing</button>
         </form>
       </div>
     </div>

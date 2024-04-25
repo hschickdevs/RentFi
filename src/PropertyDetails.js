@@ -10,6 +10,14 @@ const PropertyDetails = () => {
 
   const property = location.state?.property;
 
+  const LeaseStateDescriptions = {
+    0: 'Pending',
+    1: 'Active',
+    2: 'Inactive',
+    3: 'Deleted'
+  };
+
+
   useEffect(() => {
     if (!property || !property.NftUri) {
       console.error('Property details not provided');
@@ -55,12 +63,6 @@ const PropertyDetails = () => {
         // Create an instance of Web3 using the provider
         const web3 = new Web3(provider);
 
-        // ----- TEMPORARY ----- Define the inputs for the smart contract function.
-        const tokenId = 7; // Example tokenId
-        const rentalPrice = web3.utils.toWei('1', 'ether'); // Example rental price in ether
-        const depositAmount = web3.utils.toWei('0.1', 'ether'); // Example deposit in ether
-        const leaseDuration = 12; // Lease duration in months, example value
-
         // Create a new contract instance with the provided ABI and address
         const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
 
@@ -73,7 +75,7 @@ const PropertyDetails = () => {
         }
 
         // Call the smart contract method with the provided parameters and send a transaction
-        const result = await contract.methods.activateLease(tokenId).send({ 
+        const result = await contract.methods.activateLease(property?.tokenId).send({ 
                                                                       from: accounts[0],
                                                                       gas: '1000000',
                                                                       gasPrice: 1000000000
@@ -105,13 +107,13 @@ const PropertyDetails = () => {
         <div style={{ textAlign: 'left', padding: '0 20px' }}>
           <p>Token ID: {property?.tokenId.toString()}</p>
           <p>Owner: {property?.owner}</p>
-          <p>Status: {property?.state.toString()}</p>
-          <p>Lease Price: {property?.rentalPrice.toString()}</p>
-          <p>Deposit: {property?.depositAmount.toString()}</p>
+          <p>Status: {LeaseStateDescriptions[property?.state]}</p>
+          <p>Lease Price: {Web3.utils.fromWei(property?.rentalPrice, 'ether').toString()} RENT</p>
+          <p>Deposit: {Web3.utils.fromWei(property?.depositAmount, 'ether').toString()} RENT</p>
           <p>Duration: {property?.leaseDuration.toString()}</p>
           <p>Tenant Address: {property?.tenant}</p>
-          <button>Approve=</button>
-          <button onClick={handleSign}>Sign Lease</button>
+          <button class="property-btn">Approve</button>
+          <button onClick={handleSign} class="property-btn">Sign Lease</button>
         </div>
       </div>
     </div>

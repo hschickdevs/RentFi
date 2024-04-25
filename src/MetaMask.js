@@ -49,9 +49,9 @@ const MetaMask = () => {
            <div className="container mt-3 text-center" style={{ marginTop: '50px' }}>
                {!isWalletConnected && ( // Only show this block if the wallet is not connected
                    <>
-                       <h2>Connect your MetaMask wallet.</h2>
+                       <h1>Please connect your MetaMask wallet.</h1>
                        <div className="d-flex justify-content-center">
-                           <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
+                           <button onClick={connectWalletHandler} className="btn btn-primary connect-btn">Connect</button>
                        </div>
                    </>
                )}
