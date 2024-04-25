@@ -86,6 +86,22 @@ function Ledger() {
         {ownedProperties.map((prop, index) => (
           <div className="rental-item" key={index}>
             <h2>Lease: {prop.leaseContract}</h2>
+            <p><strong>Role:</strong> Owner</p>
+            <p><strong>Contract Status:</strong> {LeaseStateDescriptions[prop.state]}</p>
+            <p><strong>Owner:</strong> {prop.owner}</p>
+            <p><strong>Tenant:</strong> {prop.tenant}</p>
+            <div style={{ marginTop: '10px' }}>
+              <button className="property-btn" onClick={() => navigate(`/properties/${prop.tokenId}`, { state: { property: prop } })}>View Lease</button>
+              {prop.state.toString() === "0" && (
+                <button className="property-btn" onClick={() => deleteLease(prop.tokenId)}>Cancel Lease</button>
+              )}
+            </div>
+          </div>
+        ))}
+        {rentedProperties.map((prop, index) => (
+          <div className="rental-item" key={index}>
+            <h2>Lease: {prop.leaseContract}</h2>
+            <p><strong>Role:</strong> Renter</p>
             <p><strong>Contract Status:</strong> {LeaseStateDescriptions[prop.state]}</p>
             <p><strong>Owner:</strong> {prop.owner}</p>
             <p><strong>Tenant:</strong> {prop.tenant}</p>

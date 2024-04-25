@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Web3 from 'web3';
+import { ethers } from "ethers";
 import { LEASEAGREEMENTFACTORY_ADDRESS, LEASEAGREEMENTFACTORY_ABI } from './contracts/LeaseAgreementFactory.js';
+import { RENTFITOKEN_ADDRESS, RENTFITOKEN_ABI } from './contracts/RentFiToken.js';
 
 const PropertyDetails = () => {
   const location = useLocation();
@@ -57,42 +59,81 @@ const PropertyDetails = () => {
     let provider = window.ethereum;
 
     try {
-        // Request account access if needed
-        await provider.request({ method: 'eth_requestAccounts' });
+      // Request account access if needed
+      await provider.request({ method: 'eth_requestAccounts' });
 
-        // Create an instance of Web3 using the provider
-        const web3 = new Web3(provider);
+      // Create an instance of Web3 using the provider
+      const web3 = new Web3(provider);
 
-        // Create a new contract instance with the provided ABI and address
-        const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
+      // Create a new contract instance with the provided ABI and address
+      const contract = new web3.eth.Contract(LEASEAGREEMENTFACTORY_ABI, LEASEAGREEMENTFACTORY_ADDRESS);
 
-        // Get accounts from the provider
-        const accounts = await web3.eth.getAccounts();
+      // Get accounts from the provider
+      const accounts = await web3.eth.getAccounts();
 
-        // Check if we have accounts available
-        if (accounts.length === 0) {
-            throw new Error("No accounts available. Please connect to MetaMask.");
-        }
+      // Check if we have accounts available
+      if (accounts.length === 0) {
+        throw new Error("No accounts available. Please connect to MetaMask.");
+      }
 
-        // Call the smart contract method with the provided parameters and send a transaction
-        const result = await contract.methods.activateLease(property?.tokenId).send({ 
-                                                                      from: accounts[0],
-                                                                      gas: '1000000',
-                                                                      gasPrice: 1000000000
-                                                                    }); // Using the first account to send the transaction
+      // Call the smart contract method with the provided parameters and send a transaction
+      const result = await contract.methods.activateLease(property?.tokenId).send({
+        from: accounts[0],
+        gas: '1000000',
+        gasPrice: 1000000000
+      }); // Using the first account to send the transaction
 
-        // Log the transaction receipt to console
-        console.log('Transaction receipt:', result);
+      // Log the transaction receipt to console
+      console.log('Transaction receipt:', result);
 
-        // Optionally navigate back to the home page or another appropriate page
+      // Optionally navigate back to the home page or another appropriate page
     } catch (error) {
-        // Log any errors that occur during the process
-        console.error('Error creating lease contract:', error);
+      // Log any errors that occur during the process
+      console.error('Error creating lease contract:', error);
     }
     // TODO add function call to updateLeaseStatus from factory lease agreement
     // TODO add function call to activateLease
     // TODO add function call to take money from renter
     window.location.href = '/ledger'; // Directly changing the URL
+  };
+
+  const handleApprove = async () => {
+    // Assuming 'window.ethereum' is available in the global scope.
+    let provider = window.ethereum;
+
+    try {
+      // Request account access if needed
+      await provider.request({ method: 'eth_requestAccounts' });
+
+      // Create an instance of Web3 using the provider
+      const web3 = new Web3(provider);
+
+      // Create a new contract instance with the provided ABI and address
+      const contract = new web3.eth.Contract(RENTFITOKEN_ABI, RENTFITOKEN_ADDRESS);
+
+      // Get accounts from the provider
+      const accounts = await web3.eth.getAccounts();
+
+      // Check if we have accounts available
+      if (accounts.length === 0) {
+        throw new Error("No accounts available. Please connect to MetaMask.");
+      }
+
+      // Call the smart contract method with the provided parameters and send a transaction
+      const result = await contract.methods.approve(LEASEAGREEMENTFACTORY_ADDRESS, ethers.MaxUint256).send({
+        from: accounts[0],
+        gas: '1000000',
+        gasPrice: 1000000000
+      });
+
+      // Log the transaction receipt to console
+      console.log('Transaction receipt:', result);
+
+      // Optionally navigate back to the home page or another appropriate page
+    } catch (error) {
+      // Log any errors that occur during the process
+      console.error('Error approving the token:', error);
+    }
   };
 
   return (
@@ -112,7 +153,7 @@ const PropertyDetails = () => {
           <p>Deposit: {Web3.utils.fromWei(property?.depositAmount, 'ether').toString()} RENT</p>
           <p>Duration: {property?.leaseDuration.toString()}</p>
           <p>Tenant Address: {property?.tenant}</p>
-          <button class="property-btn">Approve</button>
+          <button onClick={handleApprove} className="property-btn">Approve</button>
           <button onClick={handleSign} class="property-btn">Sign Lease</button>
         </div>
       </div>
