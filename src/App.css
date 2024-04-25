@@ -45,22 +45,30 @@
   display: flex;
   justify-content: flex-end;
  }
- 
- 
- .nav-link.active {
-  color: #007bff; /* Bootstrap primary color, or choose your own */
-  font-weight: bold;
- }
- 
- 
- .nav-item .nav-link {
-  font-size: 0.9em; /* Adjust as needed for smaller text */
- }
- 
- 
+  
  .App-link {
   color: #61dafb;
  }
+
+ .navbar-nav .nav-link {
+  color: #08354F; /* Primary color */
+  font-size: 1.1rem; /* Larger font size */
+  font-weight: 500; /* Medium font weight for better visibility */
+  padding: 10px 15px; /* Ample padding for clickable area */
+  transition: color 0.3s ease-in-out; /* Smooth transition for color */
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: #08354F; /* Darker shade on hover/focus */
+  text-decoration: none; /* Remove underline */
+  background-color: #e7f5ff; /* Light background on hover/focus */
+}
+
+.navbar-nav .nav-link.active {
+  color: #10C3AF; /* Active link color */
+  background-color: #e8fffc; /* Light background for active state */
+}
  
  
  .grid-item {
@@ -90,7 +98,71 @@
   float: left;
  }
  
- 
- 
- 
- 
+ .property-btn {
+  border: none;
+  outline: none;
+  padding: 10px;
+  color: white;
+  background-color: #10C3AF;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 25%;
+  margin-right: 5px;
+}
+.property-btn:hover {
+  background-color: #08354F;
+  border-color: #08354F;
+}
+
+h1 {
+  font-size: 36px; /* Adjust size as needed */
+  font-weight: bold;
+  color: #324D67; /* A deep blue, change as per your color scheme */
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.connect-btn {
+  background-color: #10C3AF;
+  border-color: #10C3AF;
+}
+.connect-btn:hover {
+  background-color: #08354F;
+  border-color: #08354F;
+}
+
+.rental-item {
+  background-color: #ffffff; /* White background for clarity */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  padding: 20px; /* Ample padding for content */
+  margin-bottom: 20px; /* Space between entries */
+  transition: box-shadow 0.3s ease-in-out; /* Smooth transition for shadow */
+}
+
+.rental-item:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Enhanced shadow on hover */
+}
+
+.rental-item h2 {
+  color: #324D67; /* Ensuring heading color matches */
+  margin-top: 0;
+  margin-bottom: 10px; /* Less space below heading */
+}
+
+.rental-item p {
+  font-size: 16px; /* Larger font size for readability */
+  color: #666; /* Dark gray for text */
+  line-height: 1.5; /* More readable line spacing */
+}
+
+.property-btn {
+  margin-top: 10px; /* Space above button */
+  width: auto; /* Adjust width to content */
+  padding: 10px 20px; /* Larger padding for better clickability */
+}

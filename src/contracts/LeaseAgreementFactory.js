@@ -1,4 +1,4 @@
-export const LEASEAGREEMENTFACTORY_ADDRESS = '0xEfdd4A986B45d415A81e9E03E336A769B58ACdce';
+export const LEASEAGREEMENTFACTORY_ADDRESS = '0x2Ca471E127287170aAaEca33fAB909C4E2c03c80';
 
 export const LEASEAGREEMENTFACTORY_ABI = [
 	{
@@ -45,6 +45,19 @@ export const LEASEAGREEMENTFACTORY_ABI = [
 				"type": "address"
 			}
 		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "deleteLeaseContract",
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import Web3 from 'web3';
+import "./PropertyList.css";
 
 
 const PropertyList = ({ propertiesArr }) => {
     const [nftDataList, setNftDataList] = useState([]);
     let navigate = useNavigate();
-    const location = useLocation(); 
+    const location = useLocation();
     const loginState = location.state;
 
     useEffect(() => {
@@ -14,6 +16,7 @@ const PropertyList = ({ propertiesArr }) => {
             const dataList = [];
             for (const property of propertiesArr) {
                 try {
+                    console.log(property);
                     const response = await fetch(property.NftUri);
                     const data = await response.json();
                     dataList.push(data);
@@ -22,6 +25,7 @@ const PropertyList = ({ propertiesArr }) => {
                     dataList.push({});
                 }
             }
+            // console.log(dataList);
             setNftDataList(dataList);
         };
 
@@ -38,25 +42,36 @@ const PropertyList = ({ propertiesArr }) => {
                     {loginState.loginSuccessMessage}
                 </div>
             )}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', justifyContent: 'center', alignItems: 'start' }}>
+
+            {
+                propertiesArr.length > 0 && (<h1>Lease Marketplace</h1>)
+            }
+            <div className="property-grid">
                 {propertiesArr.map((property, index) => (
-                    <div key={index} className="card" style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', transition: '0.3s' }}>
+                    <div key={index} className="property-card">
                         {nftDataList[index] && nftDataList[index].images ? (
-                            <img
-                                src={nftDataList[index].images[0]}
-                                alt={nftDataList[index].name || 'Property'}
-                                style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-                            />
+                            <div className="property-details">
+                                <img
+                                    src={nftDataList[index].images[0]}
+                                    alt={nftDataList[index].name || 'Property'}
+                                    className="property-image"
+                                />
+                                <h4 className="property-heading">{nftDataList[index].name}</h4>
+                                <p className="property-info">Rental Price: {Web3.utils.fromWei(property.rentalPrice.toString(), 'ether')} RENT</p>
+                                <p className="property-info">Signing Deposit: {Web3.utils.fromWei(property.depositAmount.toString(), 'ether')} RENT</p>
+                                <p className="property-info">Lease Duration: {property.leaseDuration.toString()} Months</p>
+                            </div>
                         ) : (
-                            <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f0f0' }}>
+                            <div className="property-image-placeholder">
                                 <span>Loading...</span>
                             </div>
                         )}
-                        <div style={{ padding: '20px', textAlign: 'center', backgroundColor: 'white' }}>
-                            <h4 style={{ margin: '0 0 10px 0' }}>{property.name}</h4>
+                        <div className="property-button-div">
                             <button
-                                onClick={() => navigate(`/properties/${property.tokenId}`, { state: { property: property, nftData: nftDataList[index] } })}
-                                style={{ border: 'none', outline: 'none', padding: '10px', color: 'white', backgroundColor: '#00B4D8', borderRadius: '10px', cursor: 'pointer', width: '100%' }}
+                                onClick={() => navigate(`/properties/${property.tokenId}`, {
+                                    state: { property: property, nftData: nftDataList[index] }
+                                })}
+                                className="property-button"
                             >
                                 View Details
                             </button>
@@ -64,6 +79,8 @@ const PropertyList = ({ propertiesArr }) => {
                     </div>
                 ))}
             </div>
+
+
         </>
     );
 };

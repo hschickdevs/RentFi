@@ -38,7 +38,7 @@ function App() {
         const web3 = new Web3(provider);
         setWeb3Instance(web3);
         setIsWalletConnected(true);
-        fetchData(web3); // Fetch data after connecting
+        await fetchData(web3); // Fetch data after connecting
         const loginSuccessMessage = 'Your account has successfully been logged in.';
         navigate('/properties', { state: { loginSuccess: true, loginSuccessMessage: loginSuccessMessage } });
       } catch (error) {
@@ -55,8 +55,8 @@ function App() {
           <div className="container mt-3 text-center">
             {!isWalletConnected && (
               <>
-                <h2>Connect your MetaMask wallet.</h2>
-                <button onClick={connectWalletHandler} className="btn btn-primary">Connect</button>
+                <h1>Please connect your MetaMask wallet.</h1>
+                <button onClick={connectWalletHandler} className="btn btn-primary connect-btn">Connect</button>
                 {errorMessage && <p>{errorMessage}</p>}
               </>
             )}
