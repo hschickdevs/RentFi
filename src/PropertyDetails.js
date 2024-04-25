@@ -80,7 +80,7 @@ const PropertyDetails = () => {
       const result = await contract.methods.activateLease(property?.tokenId).send({
         from: accounts[0],
         gas: '1000000',
-        gasPrice: 1000000000
+        gasPrice: 10000000000
       }); // Using the first account to send the transaction
 
       // Log the transaction receipt to console
