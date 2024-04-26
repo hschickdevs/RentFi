@@ -8,9 +8,9 @@
     <br>
     <a href="#-about-rentfi"><b>About</b></a>
     •
-    <a href="#-environments"><b>Environments</b></a>
+    <a href="#-demo"><b>Demo</b></a>
     •
-    <a href="#-local-development"><b>Local Development</b></a>
+    <a href="#-installation--setup"><b>Installation & Setup</b></a>
     •
     <a href="https://github.com/hschickdevs/RentFi/issues"><b>Issues</b></a>
     •    
@@ -30,18 +30,63 @@ We aim to solve the following problems plaguing the existing residential leasing
 
 > _View our Pitch Deck Here:_ [**🔗 RentFi Pitch Deck.pdf**](public/RentFi%20Pitch%20Deck.pdf)
 
-## 📦 Environments
+## 📦 Installation & Setup
 
-| Name    | Link                 |
-| ------- |----------------------|
-| Mainnet | _In Development ..._ |
-| Testnet | _In Development ..._ |
+Follow the steps below to install and deploy RentFi on your local machine and the bockchain. First clone the repository:
 
-## 👨🏻‍💻 Local Development
+```bash
+git clone https://github.com/hschickdevs/RentFi.git
+```
 
-> [**🔗 Blockchain Development Documentation**](frontend/README.md) 
+### ⛓️ Blockchain Environment Setup
 
-> [**🔗 Frontend Development Documentation**](blockchain/README.md)
+RentFi is built on the Ethereum blockchain, but the contracts can be deployed on any . To deploy the smart contracts, we have used [Remix IDE](https://remix.ethereum.org/) to manually compile and deploy. For more information on the contracts, see [contracts/SmartContractsDev.md](contracts/SmartContractsDev.md).
+
+1. Deploy the `contracts/RentFiToken.sol` contract. This is the utility token for the platform and is required to deploy the factory contract.
+
+2. Deploy the `contracts/PropertyRegistryNFT.sol` contract. This is the NFT contract that represents the properties on the platform.
+
+3. Deploy the `contracts/LeaseAgreementFactory.sol` contract. In deploying this contract, you will need to pass the addresses of the `RentFiToken` and `PropertyRegistryNFT` contracts as arguments.
+
+4. Set the address of the `RentFiToken` and `LeaseAgreementFactory` contracts in their respective `src/contracts` files.
+
+> **Note:** The LeaseAgreementFactory will be empty at this point, you will need to mint new NFTs on the PropertyRegistryNFT contract and then create new lease agreements using the factory.
+
+### 🖥️ Web Application Setup
+
+To run the RentFi web application, you will need [npm and Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed on your machine. Once these are installed:
+
+1. Install the required dependencies:
+    ```bash
+    npm install
+    ```
+
+2. Start the development server:
+    ```bash
+    npm start
+    ```
+
+## 🌐 Demo
+
+### `index.js`
+
+<img src="public/index-page.png" alt="index-page" width="800">
+
+### `propertyList.js`
+
+<img src="public/property-list-page.png" alt="property-list-page" width="800">
+
+### `propertyDetails.js`
+
+<img src="public/property-details-page.png" alt="property-details-page" width="800">
+
+### `createListing.js`
+
+<img src="public/create-listing-page.png" alt="create-listing-page" width="800">
+
+### `ledger.js`
+
+<img src="public/ledger-page.png" alt="ledger-page" width="800">
 
 ## ⚖️ License
 
